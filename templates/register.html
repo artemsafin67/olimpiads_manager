@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <script defer src="../js_files/image_loader.js"></script>
+    <form method="post" novalidate class="login_block" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <h3 class="text-center">Регистрация</h3>
+
+        <div class="form-group text-center" style="margin: 30px auto">
+            {{ form.photo.label(class="image_label", for="avatar_photo", id="avatar_label") }}
+            {{ form.photo(class="form-cotrol", id="avatar_photo", type="file", style="display: none") }}
+            {% for error in form.photo.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.name.label }}
+            {{ form.name(class="form-control", type="text", placeholder="Иван") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.surname.label }}
+            {{ form.surname(class="form-control", type="text", placeholder="Иванов") }}
+            {% for error in form.surname.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.fatherhood.label }}
+            {{ form.fatherhood(class="form-control", type="text", placeholder="Иванович") }}
+            {% for error in form.fatherhood.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.grade.label }}
+            {{ form.grade(class="form-control", type="text", placeholder="Ваш класс обучения (число)") }}
+            {% for error in form.grade.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control", type="email", placeholder="some_email@mail.ru") }}
+
+            {% if message_email %}
+                <div class="alert alert-danger">
+                    {{ message_email }}
+                </div>
+            {% endif %}
+
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control", type="password", placeholder="123abc")}}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password_again.label }}
+            {{ form.password_again(class="form-control", type="password", placeholder="123abc")}}
+            {% for error in form.password_again.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group text-center">{{ form.submit(type="submit", class="btn btn-outline-info") }}</div>
+    </form>
+
+{% endblock %}

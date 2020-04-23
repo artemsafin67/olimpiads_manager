@@ -1,0 +1,44 @@
+body {
+    background-color: #90A0B3;
+}
+
+.login_block {
+    width: 800px;
+    border: 1px solid green;
+    border-radius: 20px;
+    padding: 30px;
+    background-color: #f2ddc6;
+    margin: 20px auto;
+}
+
+.news_block {
+    background-color: #f2ddc6;
+    width: 800px;
+    padding: 30px;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.image_label {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border: 6px solid orange;
+    border-radius: 50%;
+    background: url("../img/avatars/default.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.news_picture {
+    margin-top: 20px;
+    margin-right: 20px;
+    float: left;
+    border-radius: 20px;
+}
+
+.clear {
+    clear: both;
+}

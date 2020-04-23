@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="post" novalidate class="login_block">
+        {{ form.hidden_tag() }}
+
+        <h3 class="text-center">Авторизация</h3>
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control", type="email", placeholder="Email") }}
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control", type="password", placeholder="Пароль") }}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">{{ form.remember_me() }} {{ form.remember_me.label }} </div>
+        <div class="form-group text-center">{{ form.submit(type="submit", class="btn btn-outline-info") }}</div>
+        <div class="text-center text-danger">{{ message }}</div>
+    </form>
+{% endblock %}
