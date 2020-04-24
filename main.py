@@ -82,9 +82,10 @@ def register():
                 file.write(data)
         else:
             user.photo = f'../static/img/avatars/default.jpg'
-        login_user(user)
 
+        login_user(user)
         db_session.commit()
+
         return redirect("/")
     else:
         return render_template("register.html", form=form)
@@ -101,6 +102,28 @@ def news():
         news_in_rows.append(all_news[i: min(len(all_news), i + 3)])
 
     return render_template("news.html", news=news_in_rows)
+
+
+@app.route('/olimpiads')
+def olimpiads():
+    db_session = create_session()
+
+    all_olimpiads = db_session.query(OlimpiadsGroup).all()
+    olimpiads_in_rows = []
+
+    for i in range(0, len(all_olimpiads), 3):
+        olimpiads_in_rows.append(all_olimpiads[i: min(len(all_olimpiads), i + 3)])
+
+    return render_template("olimpiads.html", olimpiads=olimpiads_in_rows)
+
+
+@app.route('/particular_olimpiad/<int:olimpiad_id>')
+def particular_olimpiad(olimpiad_id):
+    db_session = create_session()
+    item = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.id == olimpiad_id).first()
+    subjects = item.subjects.split(', ')
+
+    return render_template("particular_olimpiad.html", olimpiad=item, subjects=subjects)
 
 
 @app.route('/particular_news/<int:news_id>')
