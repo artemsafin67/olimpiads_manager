@@ -5,8 +5,14 @@
         <h3 class="text-center text-danger">{{ olimpiad.name }}</h3>
 
         <div class="container">
+
             <div class="row" style="margin-top: 40px">
                 <div class="col-5">
+                    <div align="center">
+                        <h4 class="organizer_el" style="display:inline-block">
+                            {{ olimpiad.organizer }}
+                        </h4>
+                    </div>
                     <p style="font-size: 16pt">{{ olimpiad.description }}</p>
                     <div class="text-center">
                         <a href="{{ olimpiad.link }}" class="card-link">Сайт олимпиады</a>
@@ -24,7 +30,18 @@
                         {{ olimpiad.grades_description }}
                     </div>
                 </div>
+            </div>
 
+        </div>
+
+        <div style="text-align: center; margin-top: 50px">
+            <a href="/olimpiads" class="btn btn-outline-danger" style="display: inline-block; width: 200px; margin-right: 5px">
+                Назад
+            </a>
+            <a href="/register_olimp/{{ olimpiad.id }}" class="btn btn-outline-info" style="display: inline-block; width: 200px; margin-right: 5px">
+                Хочу участвовать
+            </a>
+        </div>
 
     </div>
 {% endblock %}

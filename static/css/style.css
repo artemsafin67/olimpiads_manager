@@ -43,8 +43,8 @@ body {
 }
 
 .subject_el {
-    border: 4px solid #0092a8;
-    color: #ff0a81;
+    border: 1px solid green;
+    color: green;
     border-radius: 10px;
     padding: 5px;
     margin: 10px 5px 5px 5px;
@@ -52,10 +52,18 @@ body {
 }
 
 .grade_el {
-    border: 4px solid #ff0a81;
-    color: #0092a8;
+    border: 1px solid #6666ff;
+    color: #6666ff;
     border-radius: 10px;
     padding: 5px;
     width: 150px;
     margin: 0 auto;
+}
+
+.organizer_el {
+    border: 1px solid #d470ff; 
+    border-radius: 5px; 
+    color: #d470ff; 
+    padding: 5px;
+    text-align: center;
 }
