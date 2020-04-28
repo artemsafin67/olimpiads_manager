@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, IntegerField, SubmitField, FileF
 from wtforms.validators import InputRequired, EqualTo, Email, NumberRange
 
 
-class RegisterForm(FlaskForm):
+class EditProfileForm(FlaskForm):
     photo = FileField("")
     name = StringField("Имя", validators=[InputRequired(message="Вы не заполнили это поле")])
     surname = StringField("Фамилия", validators=[InputRequired(message="Вы не заполнили это поле")])
@@ -13,4 +13,4 @@ class RegisterForm(FlaskForm):
                                              Email(message="Неправильно указана почта")])
     password = PasswordField("Пароль", validators=[InputRequired(message="Вы не заполнили это поле")])
     password_again = PasswordField("Пароль ещё раз", validators=[InputRequired(message="Вы не заполнили это поле"), EqualTo("password", "Пароли не совпадают")])
-    submit = SubmitField("Зарегистрироваться")
+    submit = SubmitField("Изменить")

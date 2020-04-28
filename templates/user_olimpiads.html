@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="text-center text-warning" style="margin-top: 30px">Мои олимпиады</h3>
+<div class="container" style="margin-top: 50px">
+{% for row in olimpiads %}
+    <div class="row justify-content-between" style="margin-top: 30px; margin-bottom: 20px;">
+    {% for item in row %}
+        <div class="col">
+            <div class="card" style="width: 20rem; height: 29rem; padding-bottom: 8px; margin:auto">
+                <img src={{ item.olimpiads_group.photo }} onerror="this.src='../static/img/news/default.jpg'" class="card card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.olimpiads_group.name }}</h5> 
+                    <p class="card-text subject_el">{{ item.subject }}</p>
+                    <p class="card-text grade_el text-center" style="display: inline-block">{{ item.grade }} класс</p>
+	                <p class="card-text organizer_el text-right" 
+	                    style="margin-top: 5px; display: inline-block">{{ item.city }}</p>
+	                <p class="card-text date_el" style="display: inline-block">{{ item.registration_data.date.strftime("%A, %d %B %Y") }}</p>
+                </div>
+                <a href="delete_olimp/{{ item.id }}" class="card-link btn btn-outline-danger" style="width: 8rem; margin: auto">Отменить участие</a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

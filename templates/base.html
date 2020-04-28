@@ -13,7 +13,7 @@
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script defer src="../static/js/image_losader.js"></script>
+    <script defer src="../static/js/image_loader.js"></script>
     <script defer src="../static/js/link_to_tasks.js"></script>
 
     <title>{{ title }}</title>
@@ -30,14 +30,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-warning" href="#">Зачем писать олимпиады</a>
+                    <a class="nav-link text-warning" href="/why_olimps">Зачем писать олимпиады</a>
                 </li>
-
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2 ml-3" type="search" placeholder="Поиск" aria-label="Search">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Искать</button>
-                </form>
-
             </ul>
         </div>
 
@@ -51,11 +45,9 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Избранные олимпиады</a>
-                            <a class="dropdown-item" href="#">Ближайшие олимпиады</a>
+                            <a class="dropdown-item" href="/user_olimpiads">Мои олимпиады</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Профиль</a>
-                            <a class="dropdown-item" href="#">Редактировать профиль</a>
+                            <a class="dropdown-item" href="/edit_profile">Редактировать профиль</a>
                             <a class="dropdown-item" href="/logout">Выйти из аккаунта</a>
                         </div>
                     </li>

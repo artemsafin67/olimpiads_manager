@@ -4,10 +4,10 @@
     <form method="post" novalidate class="login_block" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
 
-        <h3 class="text-center">Регистрация</h3>
+        <h3 class="text-center">Профиль</h3>
 
         <div class="form-group text-center" style="margin: 30px auto">
-            {{ form.photo.label(class="image_label_default", for="avatar_photo", id="avatar_label") }}
+            {{ form.photo.label(class="image_label", style="background: url(../static/img/avatars/default.jpg); background-size: cover; background-repeat: no-repeat; background-position: center", for="avatar_photo", id="avatar_label") }}
             {{ form.photo(class="form-control", id="avatar_photo", type="file", style="display: none") }}
             {% for error in form.photo.errors %}
                 <div class="alert alert-danger">
@@ -58,7 +58,7 @@
 
         <div class="form-group">
             {{ form.email.label }}
-            {{ form.email(class="form-control", type="email", placeholder="some_email@mail.ru") }}
+            {{ form.email(class="form-control", type="email", readonly="readonly", placeholder="some_email@mail.ru") }}
 
             {% if message_email %}
                 <div class="alert alert-danger">

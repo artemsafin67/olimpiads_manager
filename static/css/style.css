@@ -19,7 +19,7 @@ body {
     overflow: hidden;
 }
 
-.image_label {
+.image_label_default {
     display: inline-block;
     width: 200px;
     height: 200px;
@@ -29,6 +29,14 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.image_label {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border: 6px solid orange;
+    border-radius: 50%;
 }
 
 .news_picture {
@@ -56,19 +64,21 @@ body {
     color: #6666ff;
     border-radius: 10px;
     padding: 5px;
-    width: 150px;
-    margin: 0 auto;
+    margin-right: 5px;
 }
 
 .organizer_el {
     border: 1px solid #d470ff; 
-    border-radius: 5px; 
+    border-radius: 10px; 
     color: #d470ff; 
     padding: 5px;
     text-align: center;
 }
 
-.select_el {
+.date_el {
+    border: 1px solid red;
+    color: red;
+    border-radius: 10px;
+    padding: 5px;
     margin: 0 auto;
-    font-size: 16pt;
 }

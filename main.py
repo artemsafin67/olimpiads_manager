@@ -5,6 +5,7 @@ from data.forms.loginForm import LoginForm
 from data.forms.registerForm import RegisterForm
 from data.forms.taskForm import TaskForm
 from data.forms.registerOlimpForm import RegisterOlimpForm
+from data.forms.editProfileForm import EditProfileForm
 
 import datetime
 
@@ -94,6 +95,43 @@ def register():
         return render_template("register.html", form=form)
 
 
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    print(current_user, 'before')
+    form = EditProfileForm()
+
+    if form.validate_on_submit():
+        db_session = create_session()
+        print(form['surname'].data)
+        current_user.name = form['name'].data
+        current_user.surname = form['surname'].data
+        current_user.fatherhood = form['fatherhood'].data
+        current_user.grade = form['grade'].data
+        current_user.set_password(form['password'].data)
+
+        data = form['photo'].data.read()
+        if data:
+            current_user.photo = f'../static/img/avatars/{current_user.id}.jpg'
+            with open(f'static/img/avatars/{current_user.id}.jpg', 'wb') as file:
+                file.write(data)
+        if not data and not current_user.photo:
+            current_user.photo = f'../static/img/avatars/default.jpg'
+
+        db_session.merge(current_user)
+        db_session.commit()
+        print(current_user, 'after')
+
+        return redirect("/")
+    if request.method == "GET":
+        form.name.data = current_user.name
+        form.surname.data = current_user.surname
+        form.fatherhood.data = current_user.fatherhood
+        form.grade.data = current_user.grade
+        form.email.data = current_user.email
+        return render_template("edit_profile.html", form=form)
+
+
 @app.route('/')
 def news():
     db_session = create_session()
@@ -105,6 +143,11 @@ def news():
         news_in_rows.append(all_news[i: min(len(all_news), i + 3)])
 
     return render_template("news.html", news=news_in_rows)
+
+
+@app.route('/why_olimps')
+def why_olimps():
+    return render_template("why_olimps.html")
 
 
 @app.route('/olimpiads')
@@ -119,6 +162,20 @@ def olimpiads():
         olimpiads_in_rows.append(all_olimpiads[i: min(len(all_olimpiads), i + 3)])
 
     return render_template("olimpiads.html", olimpiads=olimpiads_in_rows)
+
+
+@app.route('/user_olimpiads')
+@login_required
+def user_olimpiads():
+    db_session = create_session()
+    user = db_session.query(User).filter(User.email == current_user.email).first()
+    all_olimpiads = user.olimpiads
+    olimpiads_in_rows = []
+
+    for i in range(0, len(all_olimpiads), 3):
+        olimpiads_in_rows.append(all_olimpiads[i: min(len(all_olimpiads), i + 3)])
+
+    return render_template("user_olimpiads.html", olimpiads=olimpiads_in_rows)
 
 
 @app.route('/particular_olimpiad/<int:olimpiad_id>')
@@ -193,6 +250,18 @@ def register_olimp(olimpiad_id):
             return render_template("register_olimp.html", form=form, olimpiad=olimpiad,
                                    message="Олимпиады по выбранным параметрам не найдено")
     return render_template("register_olimp.html", form=form, olimpiad=olimpiad)
+
+
+@app.route('/delete_olimp/<int:olimp_id>')
+@login_required
+def delete_olimp(olimp_id):
+    db_session = create_session()
+    user = db_session.query(User).filter(User.email == current_user.email).first()
+    olimp = db_session.query(Olimpiad).filter(Olimpiad.id == olimp_id).first()
+    user.olimpiads.remove(olimp)
+    db_session.commit()
+    return redirect('/user_olimpiads')
+
 
 
 @app.route('/particular_news/<int:news_id>')
