@@ -3,6 +3,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 from data.forms.loginForm import LoginForm
 from data.forms.registerForm import RegisterForm
+from data.forms.taskForm import TaskForm
+from data.forms.registerOlimpForm import RegisterOlimpForm
 
 import datetime
 
@@ -14,6 +16,7 @@ from data.tables.olimpiadsGroup import OlimpiadsGroup
 from data.tables.olimpiadRegistration import OlimpiadRegistration
 from data.tables.user import User
 
+from useful_classes import TimeTable
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dfjdkfjdkfjdkfdj'
@@ -107,8 +110,9 @@ def news():
 @app.route('/olimpiads')
 def olimpiads():
     db_session = create_session()
-
     all_olimpiads = db_session.query(OlimpiadsGroup).all()
+    db_session.close()
+
     olimpiads_in_rows = []
 
     for i in range(0, len(all_olimpiads), 3):
@@ -121,9 +125,74 @@ def olimpiads():
 def particular_olimpiad(olimpiad_id):
     db_session = create_session()
     item = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.id == olimpiad_id).first()
+
     subjects = item.subjects.split(', ')
 
-    return render_template("particular_olimpiad.html", olimpiad=item, subjects=subjects)
+    all_news = sorted(db_session.query(OlimpiadsGroupNews).filter(
+        OlimpiadsGroupNews.olimpiad_group_id == olimpiad_id).all(), key=lambda x: x.date)
+    news_in_rows = []
+
+    for i in range(0, min(len(all_news), 2), 2):
+        news_in_rows.append(all_news[i: min(len(all_news), i + 2)])
+
+    timetable = TimeTable(item.grades, item.subjects)
+    for olimpiad in item.olimpiads:
+        timetable.add(olimpiad.subject, olimpiad.grade, olimpiad.registration_data.date)
+
+    return render_template("particular_olimpiad.html", olimpiad=item, subjects=subjects,
+                           news=news_in_rows, timetable=timetable)
+
+
+@app.route('/learning')
+def learn():
+    form = TaskForm()
+    return render_template("learning.html", form=form)
+
+
+@app.route('/tasks/<int:olimpiad_id>', methods=["GET", "POST"])
+def tasks(olimpiad_id):
+    db_session = create_session()
+    olimpiad = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.id == olimpiad_id).first()
+    form = TaskForm()
+    if form.validate_on_submit():
+        res_olimp = db_session.query(Olimpiad).filter(Olimpiad.subject == form["subject"].data,
+                                                      Olimpiad.grade == form["grade"].data,
+                                                      Olimpiad.olimpiads_group_id == olimpiad.id).first()
+
+        if res_olimp:
+            return render_template("tasks.html", form=form, olimpiad=olimpiad, file=res_olimp.tasks)
+        else:
+            return render_template("tasks.html", form=form, olimpiad=olimpiad,
+                                   message="Задания для такого предмета или класса не найдены")
+    else:
+        return render_template("tasks.html", form=form, olimpiad=olimpiad)
+
+
+@app.route('/register_olimp/<int:olimpiad_id>', methods=["GET", "POST"])
+@login_required
+def register_olimp(olimpiad_id):
+    db_session = create_session()
+    olimpiad = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.id == olimpiad_id).first()
+
+    form = RegisterOlimpForm()
+    if form.validate_on_submit():
+        subject = form['subject'].data
+        grade = form['grade'].data
+        city = form['city'].data
+        res_olimp = db_session.query(Olimpiad).filter(Olimpiad.olimpiads_group_id == olimpiad.id,
+                                                      Olimpiad.subject == subject,
+                                                      Olimpiad.grade == grade,
+                                                      Olimpiad.city == city).first()
+        u = db_session.query(User).filter(User.email == current_user.email).first()
+
+        if res_olimp:
+            u.olimpiads.append(res_olimp)
+            db_session.commit()
+            return redirect("/olimpiads")
+        else:
+            return render_template("register_olimp.html", form=form, olimpiad=olimpiad,
+                                   message="Олимпиады по выбранным параметрам не найдено")
+    return render_template("register_olimp.html", form=form, olimpiad=olimpiad)
 
 
 @app.route('/particular_news/<int:news_id>')

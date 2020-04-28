@@ -1,4 +1,4 @@
-from data.database.all_for_session import SqlAlchemyBase
+from data.database. all_for_session import SqlAlchemyBase
 import sqlalchemy
 from sqlalchemy import orm
 

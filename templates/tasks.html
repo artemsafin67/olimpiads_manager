@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form method="get" novalidate class="login_block">
+    {{ form.hidden_tag() }}
+
+    <h3 class="text-center">{{ olimpiad.name }}</h3>
+    <div id="olimpiad_id" style="display: none">{{ olimpiad.id }}</div>
+
+    <div class="form-group">
+      {{ form.subject.label }}
+      {{ form.subject(class="form-control", type="text", id="subject", onchange="changeLink()") }}
+      {% for error in form.subject.errors %}
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group">
+      {{ form.grade.label }}
+      {{ form.grade(class="form-control", type="text", id="grade", onchange="changeLink()") }}
+      {% for error in form.grade.errors %}
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group" style="text-align: center">
+    	<a href="../particular_olimpiad/{{ olimpiad.id }}" class="btn btn-outline-danger" style="display: inline-block; width: 150px; margin-right: 5px">
+    		Назад
+    	</a>
+
+	    <a href="" download="" id="load_file" class="btn btn-outline-info" style="display: inline-block; width: 150px; margin-right: 5px">
+	          Скачать задания
+	    </a>
+    </div>
+  </form>
+
+
+{% endblock %}

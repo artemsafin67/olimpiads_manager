@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form method="post" novalidate class="login_block">
+    {{ form.hidden_tag() }}
+
+    <h3 class="text-center">{{ olimpiad.name }}</h3>
+    <div id="olimpiad_id" style="display: none">{{ olimpiad.id }}</div>
+
+    <div class="form-group">
+      {{ form.subject.label }}
+      {{ form.subject(class="form-control", type="text", id="subject") }}
+      {% for error in form.subject.errors %}
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group">
+      {{ form.grade.label }}
+      {{ form.grade(class="form-control", type="text", id="grade") }}
+      {% for error in form.grade.errors %}
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group">
+    	{{ form.city.label }}
+    	{{ form.city(class="form-control", type="text", id="city") }}
+    	{% for error in form.city.errors %}
+    		<div class="alert alert-danger">
+    			{{ error }}
+    		</div>
+    	{% endfor %}
+
+    <div class="form-group" style="text-align: center; margin-top: 30px">
+    	<a href="../particular_olimpiad/{{ olimpiad.id }}" class="btn btn-outline-danger" 
+    		style="display: inline-block; width: 150px; margin-right: 5px">Назад</a>
+		{{ form.submit(type="submit", class="btn btn-outline-info", style="width: 150px; margin-left: 5px") }}
+    </div>
+
+    <div class="text-center text-danger">{{ message }}</div>
+  </form>
+
+{% endblock %}
