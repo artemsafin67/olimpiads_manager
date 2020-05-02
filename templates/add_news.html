@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="post" novalidate class="login_block" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <h3 class="text-center">Добавление новости</h3>
+        <div class="form-group">
+            {{ form.is_group_news(class="form-control-check", type="checkbox") }}
+            {{ form.is_group_news.label }}
+            {% for error in form.is_group_news.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.group_name.label }}
+            {{ form.group_name(class="form-control", type="text") }}
+            {% for error in form.group_name.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(class="form-control", type="text") }}
+            {% for error in form.title.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(class="form-control", type="text") }}
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.text.label }}
+            {{ form.text(class="form-control", type="text", rows="15") }}
+            {% for error in form.text.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.photo.label }}
+            {{ form.photo(class="form-control-file", type="file") }}
+            {% for error in form.photo.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group text-center">{{ form.submit(type="submit", class="btn btn-outline-info") }}</div>
+        <div class="text-center text-danger">{{ message }}</div>
+    </form>
+{% endblock %}

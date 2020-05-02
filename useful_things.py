@@ -11,3 +11,5 @@ class TimeTable:
             self.dates[subject][grade] = value
         else:
             self.dates[subject] = {grade: value}
+
+

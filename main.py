@@ -6,6 +6,9 @@ from data.forms.registerForm import RegisterForm
 from data.forms.taskForm import TaskForm
 from data.forms.registerOlimpForm import RegisterOlimpForm
 from data.forms.editProfileForm import EditProfileForm
+from data.forms.addOlimpiadsGroupForm import AddOlimpiadsGroupForm
+
+from data.forms.addNewsForm import AddNewsForm
 
 import datetime
 
@@ -17,13 +20,16 @@ from data.tables.olimpiadsGroup import OlimpiadsGroup
 from data.tables.olimpiadRegistration import OlimpiadRegistration
 from data.tables.user import User
 
-from useful_classes import TimeTable
+from useful_things import TimeTable
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dfjdkfjdkfjdkfdj'
+app.config['SECRET_KEY'] = 'gjlk;fdgnfedbf80094223r9fomzc,vl0eruhrwlk v'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+# Here will be a block for user management
 
 
 @login_manager.user_loader
@@ -98,12 +104,10 @@ def register():
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    print(current_user, 'before')
     form = EditProfileForm()
 
     if form.validate_on_submit():
         db_session = create_session()
-        print(form['surname'].data)
         current_user.name = form['name'].data
         current_user.surname = form['surname'].data
         current_user.fatherhood = form['fatherhood'].data
@@ -120,7 +124,6 @@ def edit_profile():
 
         db_session.merge(current_user)
         db_session.commit()
-        print(current_user, 'after')
 
         return redirect("/")
     if request.method == "GET":
@@ -132,17 +135,34 @@ def edit_profile():
         return render_template("edit_profile.html", form=form)
 
 
+
+
+# Here will be a block for news management
 @app.route('/')
 def news():
     db_session = create_session()
 
-    all_news = sorted(db_session.query(OlimpiadsGroupNews).all(), key=lambda x: x.date)
+    all_news = sorted(db_session.query(OlimpiadsGroupNews).all(), key=lambda x: x.date, reverse=True)
     news_in_rows = []
 
     for i in range(0, len(all_news), 3):
         news_in_rows.append(all_news[i: min(len(all_news), i + 3)])
 
     return render_template("news.html", news=news_in_rows)
+
+
+@app.route('/particular_news/<int:news_id>')
+def particular_news(news_id):
+    db_session = create_session()
+    item = db_session.query(OlimpiadsGroupNews).filter(OlimpiadsGroupNews.id == news_id).first()
+    paragraphs = item.text.split('\n\n')
+
+    return render_template("particular_news.html", news=item, paragraphs=paragraphs)
+
+
+
+
+# Here will be a block for olimpiads management
 
 
 @app.route('/why_olimps')
@@ -198,12 +218,6 @@ def particular_olimpiad(olimpiad_id):
 
     return render_template("particular_olimpiad.html", olimpiad=item, subjects=subjects,
                            news=news_in_rows, timetable=timetable)
-
-
-@app.route('/learning')
-def learn():
-    form = TaskForm()
-    return render_template("learning.html", form=form)
 
 
 @app.route('/tasks/<int:olimpiad_id>', methods=["GET", "POST"])
@@ -264,13 +278,114 @@ def delete_olimp(olimp_id):
 
 
 
-@app.route('/particular_news/<int:news_id>')
-def particular_news(news_id):
-    db_session = create_session()
-    item = db_session.query(OlimpiadsGroupNews).filter(OlimpiadsGroupNews.id == news_id).first()
-    paragraphs = item.text.split('\n\n')
 
-    return render_template("particular_news.html", news=item, paragraphs=paragraphs)
+# Here will be a block for adding data
+
+
+def add_registration(group_id):
+    db_session = create_session()
+
+    olimpiad_group = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.id == group_id).first()
+
+    for olimpiad in olimpiad_group.olimpiads:
+        registr = OlimpiadRegistration()
+        registr.date = datetime.datetime(year=2020, month=8, day=25)
+        registr.documents = "Паспорт, справка из школы, специальный бланк"
+        olimpiad.registration_data = registr
+
+        # print(olimpiad)
+        # add = input("Есть информация? ")
+        #
+        # if add == "Да":
+        #     date = datetime.datetime(year=int(input("Год: ")),
+        #                              month=int(input("Месяц: ")),
+        #                              day=int(input("День: ")))
+        #     documents = input("Документы (через символы ', '): ")
+        #
+        #     registr = OlimpiadRegistration()
+        #     registr.date = date
+        #     registr.documents = documents
+        #
+        #     olimpiad.registration_data = registr
+
+    db_session.commit()
+
+
+@app.route('/add_news', methods=["GET", "POST"])
+def add_news():
+    form = AddNewsForm()
+
+    if form.validate_on_submit():
+        db_session = create_session()
+
+        news_to_add = OlimpiadsGroupNews()
+        news_to_add.title = form['title'].data
+        news_to_add.description = form['description'].data
+        news_to_add.text = form['text'].data.replace('\r', '\n')
+
+        if form['is_group_news'] == 'on':
+            olimpiad = db_session.query(OlimpiadsGroup).filter(OlimpiadsGroup.name == form['group_name'].data).first()
+            if not olimpiad:
+                return render_template("add_news.html", form=form, message="Группа олимпиад не найдена")
+
+            news_to_add.olimpiad_group_id = olimpiad.id
+
+        db_session.add(news_to_add)
+        db_session.commit()
+
+        data = form['photo'].data.read()
+        if data:
+            news_to_add = db_session.query(OlimpiadsGroupNews).all()[-1]
+            news_to_add.photo = f'../static/img/news/{news_to_add.id}.jpg'
+
+            with open(f'static/img/news/{news_to_add.id}.jpg', 'wb') as file:
+                file.write(data)
+
+            db_session.commit()
+
+    return render_template("add_news.html", form=form)
+
+
+@app.route('/add_groups', methods=["GET", "POST"])
+def add_groups():
+    form = AddOlimpiadsGroupForm()
+
+    if form.validate_on_submit():
+        db_session = create_session()
+
+        olimpiads_group = OlimpiadsGroup()
+        olimpiads_group.name = form['name'].data
+        olimpiads_group.organizer = form['organizer'].data
+        olimpiads_group.description = form['description'].data
+        olimpiads_group.subjects = form['subjects'].data
+        olimpiads_group.grades = form['grades'].data
+        olimpiads_group.grades_description = form['grades_description'].data
+        olimpiads_group.link = form['link'].data
+        olimpiads_group.cities = form['cities'].data
+
+        for grade in olimpiads_group.grades.split(', '):
+            for subject in olimpiads_group.subjects.split(', '):
+                for city in olimpiads_group.cities.split(', '):
+                    olimpiads_group.olimpiads.append(Olimpiad(grade=grade, subject=subject,
+                                                             city=city))
+        db_session.add(olimpiads_group)
+        db_session.commit()
+
+        data = form['photo'].data.read()
+        olimpiads_group = db_session.query(OlimpiadsGroup).all()[-1]
+        if data:
+            olimpiads_group.photo = f'../static/img/olimpiads/{olimpiads_group.id}.jpg'
+
+            with open(f'static/img/olimpiads/{olimpiads_group.id}.jpg', 'wb') as file:
+                file.write(data)
+        else:
+            olimpiads_group.photo = f'../static/img/olimpiads/default.jpg'
+
+        add_registration(olimpiads_group.id)
+
+        db_session.commit()
+
+    return render_template("add_olimpiads_group.html", form=form)
 
 
 def main():

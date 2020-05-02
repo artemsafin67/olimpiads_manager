@@ -7,10 +7,10 @@
     {% for item in row %}
         <div class="col">
             <div class="card" style="width: 20rem; height: 25rem; padding-bottom: 8px; margin:auto">
-                <img src={{ item.photo }} onerror="this.src='../static/img/olimpiads/default.jpg'" class="card card-img-top">
+                <img src={{ item.photo }} onerror="this.src='../static/img/olimpiads/default.jpg'" class="card card-img-top" style="width: 20rem; height: 13rem">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ item.name }}</h5>
-                    <p class="card-text">{{ item.description }}"</p>
+                    <p class="card-text">{{ item.description }}</p>
                 </div>
                 <a href="particular_olimpiad/{{ item.id }}" class="card-link btn btn-outline-success" style="width: 8rem; margin: auto">Подробнее</a>
             </div>

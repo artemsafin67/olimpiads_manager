@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<form method="post" enctype="multipart/form-data" class="login_block">
+		{{ form.hidden_tag() }}
+
+        <h3 class="text-center">Добавление группы олимпиад</h3>
+        <div class="form-group">
+            {{ form.name.label }}
+            {{ form.name(class="form-control", type="text") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.organizer.label }}
+            {{ form.organizer(class="form-control", type="text") }}
+            {% for error in form.organizer.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(class="form-control", type="text") }}
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.subjects.label }}
+            {{ form.subjects(class="form-control", type="text") }}
+            {% for error in form.subjects.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.grades.label }}
+            {{ form.grades(class="form-control", type="text") }}
+            {% for error in form.grades.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.grades_description.label }}
+            {{ form.grades_description(class="form-control", type="text") }}
+            {% for error in form.grades_description.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.link.label }}
+            {{ form.link(class="form-control", type="text") }}
+            {% for error in form.link.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.cities.label }}
+            {{ form.cities(class="form-control", type="text") }}
+            {% for error in form.cities.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+        	{{ form.photo.label }}
+        	{{ form.photo(class="form-control-file", type="file") }}
+        	{% for error in form.photo.errors %}
+        		<div class="alert alert-danger">
+        			{{ error }}
+        		</div>
+        	{% endfor %}
+        </div>
+
+        <div class="form-group text-center">{{ form.submit(type="submit", class="btn btn-outline-info") }}</div>
+        <div class="text-center text-danger">{{ message }}</div>
+	</form>
+{% endblock %}

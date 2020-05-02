@@ -15,3 +15,6 @@ class OlimpiadsGroupNews(SqlAlchemyBase):
     date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     olimpiad_group_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('olimpiads_groups.id'))
 
+
+
+
