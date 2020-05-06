@@ -21,6 +21,8 @@ from data.tables.olimpiadRegistration import OlimpiadRegistration
 from data.tables.user import User
 
 from useful_things import TimeTable
+import threading
+from mailing import make_everything_work
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'gjlk;fdgnfedbf80094223r9fomzc,vl0eruhrwlk v'
@@ -126,19 +128,21 @@ def edit_profile():
         db_session.commit()
 
         return redirect("/")
+
     if request.method == "GET":
         form.name.data = current_user.name
         form.surname.data = current_user.surname
         form.fatherhood.data = current_user.fatherhood
         form.grade.data = current_user.grade
         form.email.data = current_user.email
-        return render_template("edit_profile.html", form=form)
 
-
+    return render_template("edit_profile.html", form=form)
 
 
 # Here will be a block for news management
-@app.route('/')
+
+
+@app.route('/', methods=["GET", "POST"])
 def news():
     db_session = create_session()
 
@@ -158,8 +162,6 @@ def particular_news(news_id):
     paragraphs = item.text.split('\n\n')
 
     return render_template("particular_news.html", news=item, paragraphs=paragraphs)
-
-
 
 
 # Here will be a block for olimpiads management
@@ -277,8 +279,6 @@ def delete_olimp(olimp_id):
     return redirect('/user_olimpiads')
 
 
-
-
 # Here will be a block for adding data
 
 
@@ -312,7 +312,11 @@ def add_registration(group_id):
 
 
 @app.route('/add_news', methods=["GET", "POST"])
+@login_required
 def add_news():
+    if current_user.id != 1:
+        return redirect('/')
+
     form = AddNewsForm()
 
     if form.validate_on_submit():
@@ -347,7 +351,11 @@ def add_news():
 
 
 @app.route('/add_groups', methods=["GET", "POST"])
+@login_required
 def add_groups():
+    if current_user.id != 1:
+        return redirect('/')
+
     form = AddOlimpiadsGroupForm()
 
     if form.validate_on_submit():
@@ -367,7 +375,7 @@ def add_groups():
             for subject in olimpiads_group.subjects.split(', '):
                 for city in olimpiads_group.cities.split(', '):
                     olimpiads_group.olimpiads.append(Olimpiad(grade=grade, subject=subject,
-                                                             city=city))
+                                                              city=city))
         db_session.add(olimpiads_group)
         db_session.commit()
 
@@ -390,7 +398,16 @@ def add_groups():
 
 def main():
     global_init('db/olimpiads_manager.sqlite')
-    app.run(host='127.0.0.1', port=8080)
+    db_session = create_session()
+
+    t1 = threading.Thread(target=make_everything_work, args=(db_session.query(OlimpiadsGroup).all(),))
+    t2 = threading.Thread(target=app.run, args=('127.0.0.1', 8080,))
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
 
 
 if __name__ == '__main__':
