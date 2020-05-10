@@ -1,3 +1,5 @@
+// That function changes avatar label then registering or editing profile
+
 document.getElementById("avatar_photo").addEventListener("change", function () {
     if (this.files[0]) {
         var fr = new FileReader();

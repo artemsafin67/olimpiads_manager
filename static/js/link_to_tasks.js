@@ -1,10 +1,15 @@
+// That function makes proper address for tasks
+
+
 function changeLink(){
+    // I will add more subjects in the future
 	var rus_to_eng = {
 		"Математика": "Math",
-		"Русский": "Russian",
+		"Русский язык": "Russian",
 		"Информатика": "Informatics",
 		"Физика": "Physics",
 		"Литература": "Literature",
+		"Английский язык": "English",
 		"Химия": "Chemistry",
 		"Биология": "Biology"
 	}

@@ -8,7 +8,7 @@
     {% for item in row %}
         <div class="col">
             <div class="card" style="width: 20rem; height: 29rem; padding-bottom: 8px; margin:auto">
-                <img src={{ item.olimpiads_group.photo }} onerror="this.src='../static/img/news/default.jpg'" class="card card-img-top">
+                <img src={{ item.olimpiads_group.photo }} onerror="this.src='../static/img/news/default.jpg'" class="card card-img-top" style="height: 13rem">
                 <div class="card-body">
                     <h5 class="card-title">{{ item.olimpiads_group.name }}</h5> 
                     <p class="card-text subject_el">{{ item.subject }}</p>

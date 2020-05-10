@@ -5,6 +5,9 @@
         {{ form.hidden_tag() }}
 
         <h3 class="text-center">Добавление новости</h3>
+
+        <div class="text-center text-danger">{{ message }}</div>
+
         <div class="form-group">
             {{ form.is_group_news(class="form-control-check", type="checkbox") }}
             {{ form.is_group_news.label }}
@@ -66,6 +69,5 @@
         </div>
 
         <div class="form-group text-center">{{ form.submit(type="submit", class="btn btn-outline-info") }}</div>
-        <div class="text-center text-danger">{{ message }}</div>
     </form>
 {% endblock %}

@@ -1,3 +1,6 @@
+# Object for representing timetable
+
+
 class TimeTable:
     def __init__(self, grades, subjects):
         self.grades = grades.split(', ')
